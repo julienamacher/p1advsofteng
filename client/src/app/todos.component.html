@@ -1,0 +1,87 @@
+
+<a href="/tags">Manage tags</a>
+
+<div>
+	<input type="text" [(ngModel)]="newTodoTitle"/>
+	<button type="button" class="btn btn-primary" (click)="addNewTodo()">Add</button>
+</div>
+
+<div *ngFor="let error of errors" class="alert alert-danger" role="alert">
+	{{error}}
+</div>
+
+<div style="margin-bottom: 0.3em;">
+	<div>
+		Click to restrict to a given tag:
+	</div>
+	
+	<button style="margin-right: 0.2em;" type="button" *ngFor="let tag of tags" [ngClass]="{'btn': true, 'btn-default': mode.view == 'all' || mode.view == 'restricted' && mode.restrictedTo != tag, 'btn-success': mode.view == 'restricted' && mode.restrictedTo == tag}" role="alert" (click)="restrictToTag(tag)">
+		{{tag}}
+	</button>
+	
+	<div *ngIf="mode.view == 'restricted'" style="margin-top: 0.3em;">
+		<button class="btn btn-danger" type="button" (click)="resetRestrictionOnTag()">
+			Remove restriction on tag
+		</button>
+	</div>
+</div>
+
+<div style="width: 20rem" [ngClass]="{'card': true, 'todo-completed': todo.completed}" *ngFor="let todo of todos; let forEachIndex = index">
+  <div class="card-body">
+
+	<h4 class="card-title" (click)="enableTodoTitleEdition(todo)" *ngIf="!todo.enableTodoTitleEdition">{{todo.title}}</h4>
+	<div *ngIf="todo.enableTodoTitleEdition">
+		<input type="text" [(ngModel)]="todo.newTitle" (focusout)="saveNewTodoTitle(todo)"/>
+	</div>
+	
+	<div *ngFor="let todoError of todo.errors" class="alert alert-danger" role="alert">
+		{{todoError}}
+	</div>
+
+    <p class="card-text"></p>
+	
+	<div style="margin-bottom: 0.5em;">
+		<div class="container">
+		  <div class="row">
+			<div class="col-md-auto" *ngIf="todo.tags.length != tags.length">
+				<div class="dropdown show" style="cursor: pointer;">
+				  <a class="btn btn-outline-primary btn-sm dropdown-toggle" id="dropdown_alltags_{{forEachIndex}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Tags
+				  </a>
+
+				  <div class="dropdown-menu" attr.aria-labelledby="dropdown_alltags_{{forEachIndex}}">
+					<a class="dropdown-item" *ngFor="let tag of getTagsThatCanBeAddedToThisTodo(todo)" (click)="addTagToTodo(todo, tag)">{{tag}}</a>
+				  </div>
+				</div>
+			</div>
+			<div class="col-md-auto">
+			  <div style="margin-left: 0.2em; cursor: pointer;" class="badge badge-primary" *ngFor="let tag of todo.tags; let forEachTagIndex = index" (click)="removeTagFromTodo(todo, forEachTagIndex)">
+				{{tag}} <i class="fa fa-times-circle fa-1" aria-hidden="true"></i>
+			  </div>
+			  <div *ngIf="todo.tags.length < 1">
+				No tags specified
+			  </div>
+			</div>
+		  </div>
+		</div>
+	</div>
+	
+	<div>
+		<button type="button" class="btn btn-default btn-sm" style="cursor: pointer;" (click)="setAsCompleted(todo)" *ngIf="!todo.completed">
+		   <i class="fa fa-check fa-2x"></i>
+		</button>
+
+		<button type="button" class="btn btn-default btn-sm" style="cursor: pointer;" (click)="deleteTodo(todo, forEachIndex)">
+		  <i class="fa fa-trash-o fa-2x"></i>
+		</button>
+
+		<button type="button" class="btn btn-default btn-sm" style="cursor: pointer;" (click)="moveTodoUp(todo, forEachIndex)" *ngIf="forEachIndex > 0 && mode.view == 'all'">
+		  <i class="fa fa-arrow-circle-up fa-2x"></i>
+		</button>
+		
+		<button type="button" class="btn btn-default btn-sm" style="cursor: pointer;" (click)="moveTodoDown(todo, forEachIndex)" *ngIf="forEachIndex + 1 < todos.length && mode.view == 'all'">
+		  <i class="fa fa-arrow-circle-down fa-2x"></i>
+		</button>
+	</div>
+  </div>
+</div>

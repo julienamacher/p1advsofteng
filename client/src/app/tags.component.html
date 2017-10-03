@@ -1,0 +1,29 @@
+
+<a href="/todos">Go back</a>
+
+<div>
+	<input type="text" [(ngModel)]="newTagName"/>
+	<button type="button" class="btn btn-primary" (click)="addNewTagName()">Add</button>
+</div>
+
+<div *ngFor="let error of errors" class="alert alert-danger" role="alert">
+	{{error}}
+</div>
+
+<div class="card" style="width: 20rem;" *ngFor="let tag of tags; let forEachIndex = index">
+  <div class="card-body">
+    <h4 class="card-title" (click)="enableTagNameEdition(tag)" *ngIf="!tag.enableTagNameEdition">{{tag.name}}</h4>
+    <input type="text" [(ngModel)]="tag.newName" (focusout)="saveNewTagName(tag)" *ngIf="tag.enableTagNameEdition"/>
+	
+	<div *ngFor="let tagError of tag.errors" class="alert alert-danger" role="alert">
+		{{tagError}}
+	</div>
+	
+    <p class="card-text"></p>
+	
+	<button type="button" class="btn btn-default btn-sm" (click)="deleteTag(tag, forEachIndex)">
+	  <i class="fa fa-trash-o fa-2x"></i> Delete
+	</button>
+	
+  </div>
+</div>

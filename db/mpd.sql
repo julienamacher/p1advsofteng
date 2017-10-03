@@ -1,0 +1,26 @@
+DROP DATABASE IF EXISTS todomvc;
+CREATE DATABASE todomvc CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE todomvc;
+
+CREATE TABLE todo
+(
+	`id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	`title` VARCHAR(255) NOT NULL,
+	`completed` BOOLEAN NOT NULL,
+	`order` INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE tag
+(
+    `id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(80) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE todo_tags
+(
+	`todo_id` INT NOT NULL,
+    `tag_id` INT NOT NULL,
+	FOREIGN KEY (`todo_id`) REFERENCES `todo`(`id`),
+	FOREIGN KEY (`tag_id`) REFERENCES `tag`(`id`),
+	PRIMARY KEY (`todo_id`, `tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
